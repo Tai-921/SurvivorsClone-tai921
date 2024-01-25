@@ -1,0 +1,121 @@
+[gd_scene load_steps=22 format=3 uid="uid://biivnqnvhmof3"]
+
+[ext_resource type="Texture2D" uid="uid://ou02e0px01ir" path="res://_asset/_texture/dirt_full_new.png" id="1_7ud05"]
+[ext_resource type="PackedScene" uid="uid://b8wvmo7jp8ctq" path="res://player/player.tscn" id="2_bkl4j"]
+[ext_resource type="PackedScene" uid="uid://dtxooricj0dgj" path="res://Enemy/enemy_kobold_weak.tscn" id="4_1ipps"]
+[ext_resource type="PackedScene" uid="uid://c5jcxsofwcxre" path="res://Utility/enemy_spawner.tscn" id="4_7dqmp"]
+[ext_resource type="Script" path="res://Utility/spawn_info.gd" id="5_16fiq"]
+[ext_resource type="PackedScene" uid="uid://ds6nypcndw3y2" path="res://Enemy/enemy_kobold_strong.tscn" id="6_1nwph"]
+[ext_resource type="PackedScene" uid="uid://cagdnhtnmtqda" path="res://Objects/experience_gem.tscn" id="6_vpk5u"]
+[ext_resource type="PackedScene" uid="uid://nxyofbjwfuym" path="res://Enemy/enemy_cyclops.tscn" id="7_5uays"]
+[ext_resource type="PackedScene" uid="uid://dh0jbege1f1u0" path="res://Enemy/enemy_juggernaut.tscn" id="8_kbpab"]
+[ext_resource type="PackedScene" uid="uid://dwth1rej3qeh4" path="res://Enemy/enemy_super.tscn" id="9_cxqpm"]
+[ext_resource type="AudioStream" uid="uid://c0a2vmaucrbih" path="res://_asset/_Audio/Music/battleThemeA.mp3" id="11_xm26o"]
+[ext_resource type="Script" path="res://_asset/_Audio/Music/snd_Music.gd" id="12_kvkcl"]
+
+[sub_resource type="Resource" id="Resource_g3l20"]
+script = ExtResource("5_16fiq")
+time_start = 0
+time_end = 30
+enemy = ExtResource("4_1ipps")
+enemy_num = 1
+enemy_spawn_delay = 0
+
+[sub_resource type="Resource" id="Resource_052jc"]
+script = ExtResource("5_16fiq")
+time_start = 30
+time_end = 210
+enemy = ExtResource("4_1ipps")
+enemy_num = 2
+enemy_spawn_delay = 0
+
+[sub_resource type="Resource" id="Resource_ymhat"]
+script = ExtResource("5_16fiq")
+time_start = 60
+time_end = 180
+enemy = ExtResource("6_1nwph")
+enemy_num = 1
+enemy_spawn_delay = 1
+
+[sub_resource type="Resource" id="Resource_6x4lq"]
+script = ExtResource("5_16fiq")
+time_start = 180
+time_end = 210
+enemy = ExtResource("7_5uays")
+enemy_num = 1
+enemy_spawn_delay = 2
+
+[sub_resource type="Resource" id="Resource_0efv1"]
+script = ExtResource("5_16fiq")
+time_start = 210
+time_end = 240
+enemy = ExtResource("6_1nwph")
+enemy_num = 2
+enemy_spawn_delay = 0
+
+[sub_resource type="Resource" id="Resource_iue5f"]
+script = ExtResource("5_16fiq")
+time_start = 240
+time_end = 270
+enemy = ExtResource("7_5uays")
+enemy_num = 1
+enemy_spawn_delay = 0
+
+[sub_resource type="Resource" id="Resource_vo376"]
+script = ExtResource("5_16fiq")
+time_start = 240
+time_end = 240
+enemy = ExtResource("8_kbpab")
+enemy_num = 1
+enemy_spawn_delay = 0
+
+[sub_resource type="Resource" id="Resource_axyyr"]
+script = ExtResource("5_16fiq")
+time_start = 270
+time_end = 300
+enemy = ExtResource("6_1nwph")
+enemy_num = 4
+enemy_spawn_delay = 0
+
+[sub_resource type="Resource" id="Resource_tat23"]
+script = ExtResource("5_16fiq")
+time_start = 300
+time_end = 300
+enemy = ExtResource("9_cxqpm")
+enemy_num = 1
+enemy_spawn_delay = 0
+
+[node name="World" type="Node2D"]
+
+[node name="Background" type="Sprite2D" parent="."]
+texture_filter = 1
+texture_repeat = 2
+texture = ExtResource("1_7ud05")
+region_enabled = true
+region_rect = Rect2(-4000, 4000, 4000, 4000)
+
+[node name="Player" parent="." instance=ExtResource("2_bkl4j")]
+movement_speed = 40.0
+maxhp = 80
+last_movement = Vector2(0, -1)
+
+[node name="EnemySpawner" parent="." instance=ExtResource("4_7dqmp")]
+editor_description = "亂數產生敵人"
+spawns = Array[ExtResource("5_16fiq")]([SubResource("Resource_g3l20"), SubResource("Resource_052jc"), SubResource("Resource_ymhat"), SubResource("Resource_6x4lq"), SubResource("Resource_0efv1"), SubResource("Resource_iue5f"), SubResource("Resource_vo376"), SubResource("Resource_axyyr"), SubResource("Resource_tat23")])
+time = 230
+
+[node name="Loot" type="Node2D" parent="." groups=["loot"]]
+
+[node name="ExperienceGem" parent="Loot" instance=ExtResource("6_vpk5u")]
+position = Vector2(61, -49)
+experience = 500
+
+[node name="snd_Music" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("11_xm26o")
+volume_db = -15.0
+script = ExtResource("12_kvkcl")
+
+[connection signal="playerdeath" from="Player" to="snd_Music" method="_on_player_playerdeath"]
+
+[editable path="EnemySpawner"]

@@ -1,0 +1,91 @@
+[gd_scene load_steps=7 format=3 uid="uid://b8wvmo7jp8ctq"]
+
+[ext_resource type="Script" path="res://player/player.gd" id="1_dbgs2"]
+[ext_resource type="Texture2D" uid="uid://csa3n0gfvdvmx" path="res://_asset/_texture/Player/joe_player.png" id="2_j0g84"]
+[ext_resource type="PackedScene" uid="uid://dbum8g0mswooi" path="res://Utility/hurtbox.tscn" id="3_6qug0"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hr7sw"]
+radius = 5.0
+height = 28.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3jw05"]
+size = Vector2(22, 37)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ue7bg"]
+radius = 371.469
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
+motion_mode = 1
+script = ExtResource("1_dbgs2")
+movement_speed = null
+hp = 80
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_j0g84")
+hframes = 2
+
+[node name="walkTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.2
+one_shot = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -8)
+shape = SubResource("CapsuleShape2D_hr7sw")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Hurtbox" parent="." instance=ExtResource("3_6qug0")]
+collision_mask = 2
+
+[node name="CollisionShape2D" parent="Hurtbox" index="0"]
+position = Vector2(0, -10.5)
+shape = SubResource("RectangleShape2D_3jw05")
+
+[node name="DisableTimer" parent="Hurtbox" index="1"]
+wait_time = 1.5
+
+[node name="label_hp" type="Label" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = 24.0
+offset_right = 20.0
+offset_bottom = 47.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "20"
+horizontal_alignment = 1
+
+[node name="Attack" type="Node2D" parent="."]
+
+[node name="IceSpearTimer" type="Timer" parent="Attack"]
+unique_name_in_owner = true
+wait_time = 1.5
+
+[node name="IceSpearAttackTimer" type="Timer" parent="Attack/IceSpearTimer"]
+unique_name_in_owner = true
+wait_time = 0.075
+
+[node name="EnemyDetectionArea" type="Area2D" parent="."]
+editor_description = "判定敵人"
+visible = false
+collision_layer = 4
+collision_mask = 4
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyDetectionArea"]
+shape = SubResource("CircleShape2D_ue7bg")
+
+[connection signal="hurt" from="Hurtbox" to="." method="_on_hurtbox_hurt"]
+[connection signal="timeout" from="Attack/IceSpearTimer" to="." method="_on_ice_spear_timer_timeout"]
+[connection signal="timeout" from="Attack/IceSpearTimer/IceSpearAttackTimer" to="." method="_on_ice_spear_attack_timer_timeout"]
+[connection signal="body_entered" from="EnemyDetectionArea" to="." method="_on_enemy_detection_area_body_entered"]
+[connection signal="body_exited" from="EnemyDetectionArea" to="." method="_on_enemy_detection_area_body_exited"]
+
+[editable path="Hurtbox"]

@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://b8wvmo7jp8ctq"]
+
+[ext_resource type="Script" path="res://player/player.gd" id="1_dbgs2"]
+[ext_resource type="Texture2D" uid="uid://csa3n0gfvdvmx" path="res://_asset/_texture/Player/joe_player.png" id="2_j0g84"]
+
+[node name="Player" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_dbgs2")
+movement_speed = null
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_j0g84")
+hframes = 2
+
+[node name="Camera2D" type="Camera2D" parent="."]

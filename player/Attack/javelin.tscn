@@ -1,0 +1,44 @@
+[gd_scene load_steps=5 format=3 uid="uid://bcx2f51pefw48"]
+
+[ext_resource type="Texture2D" uid="uid://bsrp2drnmp3tl" path="res://_asset/_texture/Items/Weapons/javelin_3_new.png" id="1_8e7ma"]
+[ext_resource type="Script" path="res://player/Attack/javelin.gd" id="1_righl"]
+[ext_resource type="AudioStream" uid="uid://ccby65qquuivg" path="res://_asset/_Audio/SoundEffect/woosh.wav" id="2_jjvju"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tubl0"]
+size = Vector2(4.24264, 33.9411)
+
+[node name="Javelin" type="Area2D" groups=["attack"]]
+top_level = true
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_righl")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_8e7ma")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = -0.785398
+shape = SubResource("RectangleShape2D_tubl0")
+
+[node name="AttackTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+editor_description = "攻擊計時器"
+wait_time = 5.0
+one_shot = true
+autostart = true
+
+[node name="ChangeDirection" type="Timer" parent="."]
+unique_name_in_owner = true
+editor_description = "改變方向的計時器"
+
+[node name="ResetPosTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 3.0
+autostart = true
+
+[node name="snd_attack" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_jjvju")
+
+[connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]
+[connection signal="timeout" from="ChangeDirection" to="." method="_on_change_direction_timeout"]
+[connection signal="timeout" from="ResetPosTimer" to="." method="_on_reset_pos_timer_timeout"]

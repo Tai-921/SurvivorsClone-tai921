@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://tk0itdi1mrdb"]
+
+[ext_resource type="Texture2D" uid="uid://bo3q2es50b57a" path="res://_asset/_texture/Items/Weapons/ice_spear.png" id="1_nsx5o"]
+[ext_resource type="Script" path="res://player/Attack/ice_spear.gd" id="1_s7hxs"]
+[ext_resource type="AudioStream" uid="uid://clf1j7qamp635" path="res://_asset/_Audio/SoundEffect/ice.wav" id="3_ah7py"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eqicd"]
+size = Vector2(7.77818, 34.6482)
+
+[node name="IceSpear" type="Area2D" groups=["attack"]]
+top_level = true
+scale = Vector2(0.1, 0.1)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("1_s7hxs")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0.5, -1)
+rotation = 2.35619
+shape = SubResource("RectangleShape2D_eqicd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_nsx5o")
+
+[node name="Timer" type="Timer" parent="."]
+editor_description = "飛行 10 秒沒擊中敵人則將自己刪除"
+wait_time = 10.0
+one_shot = true
+autostart = true
+
+[node name="snd_play" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_ah7py")
+pitch_scale = 5.0
+autoplay = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
